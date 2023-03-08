@@ -1,4 +1,15 @@
-FROM openjdk:18
+FROM maven:3.8.7-openjdk-18 as build
+
 WORKDIR /usr/src/myapp
-COPY ./target/demo-0.0.1-SNAPSHOT.jar ./app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+COPY . .
+
+RUN mvn package -s settings.xml
+
+FROM openjdk:18
+
+WORKDIR /opt/app
+
+COPY --from=build /usr/src/myapp/target/server.jar /opt/app/server.jar
+
+ENTRYPOINT ["java", "-jar", "server.jar"]
