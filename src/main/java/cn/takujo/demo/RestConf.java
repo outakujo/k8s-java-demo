@@ -48,7 +48,7 @@ public class RestConf {
         public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
                 throws IOException {
             var hea = request.getHeaders();
-            hea.remove("Connection");
+            hea.set("Connection", "close");
             return execution.execute(request, body);
         }
 
